@@ -1,8 +1,7 @@
 {
   "name": "telegrambot",
   "version": "1.0.0",
-  "description": "Extarnal dev module",
-  "main": "index.js",
+  "description": "External dev module",
   "scripts": {
     "eslint": "node_modules/.bin/eslint \"src/**/*.js\"",
     "start": "nodemon src/bin/www"
