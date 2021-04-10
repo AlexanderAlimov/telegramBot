@@ -3,22 +3,22 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
-    "migrate": "sequelize db:migrate"
-  },
-  "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "ejs": "~2.6.1",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
-    "node-telegram-bot-api": "^0.52.0",
-    "pg": "^8.5.1",
-    "pg-hstore": "^2.3.3",
-    "sequelize": "^6.6.2"
+    "start": "nodemon ./src/bin/www",
+    "migrate": "node_modules/.bin/sequelize db:migrate",
+    "postinstall": "cd src && npm install",
+    "eslint": "node_modules/.bin/eslint \"src/**/*.js\"",
+    "prettier": "prettier --write \"src/**/*.js\""
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "2.0.7",
+    "prettier": "2.2.1"
+  },
+  "dependencies": {
+    "pg": "^8.5.1",
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
   }
 }

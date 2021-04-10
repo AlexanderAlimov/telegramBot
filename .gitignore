@@ -35,3 +35,5 @@ node_modules
 
 # Finder stuff
 .DS_Store
+
+.idea/
