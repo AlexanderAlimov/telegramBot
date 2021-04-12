@@ -1,6 +1,5 @@
 const TelegramBot = require("node-telegram-bot-api");
 const Bot = require("../models").Bots;
-const createReminderWithPgBoss = require('../servieces/pgBoss');
 
 (async()=>{
   const allBots = await Bot.findAll({});
@@ -35,12 +34,12 @@ const createReminderWithPgBoss = require('../servieces/pgBoss');
         toDo: match[1].split(" ").splice(1).join(" ")
       }
       
-      await createReminderWithPgBoss({
-        botId: myBot.id,
-        chatId: msg.chat.id,
-        time: parseMessageData.time,
-        data: parseMessageData.toDo
-      })
+      // await createReminderWithPgBoss({
+      //   botId: myBot.id,
+      //   chatId: msg.chat.id,
+      //   time: parseMessageData.time,
+      //   data: parseMessageData.toDo
+      // })
       bot.sendMessage(msg.chat.id,'Reminder activated')
     })
 

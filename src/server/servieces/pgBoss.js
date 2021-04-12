@@ -1,4 +1,4 @@
-const createReminderWithPgBoss = async (data) => {
+const createReminderWithPgBoss = async () => {
     const PgBoss = require('pg-boss');
     const boss = new PgBoss('postgres://postgres:postgres@127.0.0.1/telegramBotDB');
   
@@ -7,16 +7,6 @@ const createReminderWithPgBoss = async (data) => {
     await boss.start();
   
     const queue = 'track-your-time';
-    const queueParams = {
-        botId: data.botId,
-        chatId: data.chatId,
-        time: data.time,
-        data: data.taskName
-    }
-  
-    let jobId = await boss.publish(queue, queueParams)
-  
-    console.log(`created job in queue ${queue}: ${jobId}`);
   
     await boss.subscribe(queue, someAsyncJobHandler);
   }

@@ -4,6 +4,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 
+const createReminderWithPgBoss = require('./server/servieces/pgBoss');
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 require("./server/bot/index");
@@ -39,5 +41,9 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+createReminderWithPgBoss();
+
+
 
 module.exports = app;
