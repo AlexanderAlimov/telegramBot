@@ -11,7 +11,6 @@ const createReminderWithPgBoss = require('../servieces/pgBoss');
 
   for(const myBot of allBots){
     const bot = new TelegramBot(myBot.token, { polling: true });
-    console.log("bot",bot);
 
     bot.onText(/\/auth (.+)/, async(msg, match) => {
       const chatId = msg.chat.id;
@@ -21,7 +20,6 @@ const createReminderWithPgBoss = require('../servieces/pgBoss');
         bot.sendMessage(chatId, "welcome dear user you are authorized");
       }
       return;
-     
     });
 
     bot.onText(/\/reminder (.+)/, async (msg, match) => {
@@ -67,13 +65,19 @@ const createReminderWithPgBoss = require('../servieces/pgBoss');
         });
     });
 
-    // bot.onText(/\/help/, (msg) => {
-    //   if(myBot.authorizedUserId !== msg.from.id){
-    //     bot.sendMessage(msg.chat.id,"Hello dear user, first You need to authorized. Please use /auth comand and enter your password.");
-    //     return;
-    //   }
-    //   bot.sendMessage(msg.chat.id, "List of usefull comands /auth <Password>");
-    // });
+    bot.onText(/\/help/, (msg) => {
+      if(myBot.authorizedUserId !== msg.from.id){
+        bot.sendMessage(msg.chat.id,"Hello dear user, first You need to authorized. Please use /auth comand and enter your password.");
+        return;
+      }
+      bot.sendMessage(msg.chat.id, `List of usefull comands:
+      /auth <Password> - simple authorization for user
+      /start - start bot and show keybord
+      /echo <random message> - test bot with displaying message
+      hi - greeting
+      bye - say goodbye and log out
+      `);
+    });
 
     bot.on('message', async(msg)=>{
 
