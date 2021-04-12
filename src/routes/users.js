@@ -4,10 +4,6 @@ const router = express.Router();
 const Bot = require("../server/models").Bots;
 // const Op = require("../server/models").Sequelize.Op;
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.render("users");
-});
 
 router.post("/createBot", async (req, res, next) => {
   try {
@@ -18,6 +14,12 @@ router.post("/createBot", async (req, res, next) => {
     if (!req.body.token) {
       throw Error("should be token");
     }
+
+    const checkIfBotExist = await Bot.findAndCountAll({where:{token: req.body.token}});
+    if(checkIfBotExist.count){
+      throw Error("token alredy exist please set another one");
+    }
+
     const bot = {
       token: req.body.token,
       botName: req.body.botName,
@@ -26,9 +28,10 @@ router.post("/createBot", async (req, res, next) => {
     const createdBot = await Bot.create(bot);
     console.log(createdBot);
 
-    res.render("users");
+    res.json({"status":'200'});
   } catch (err) {
     console.log(err);
+    res.json({"err": err.message });
   }
 });
 

@@ -1,17 +1,22 @@
 const TelegramBot = require("node-telegram-bot-api");
 const Bot = require("../models").Bots;
+const createReminderWithPgBoss = require('../servieces/pgBoss');
 
 (async()=>{
+  const allBots = await Bot.findAll({});
 
-  const data = await Bot.findOne({where:{id: 2}});
+  if(!allBots.length){
+    return;
+  }
 
-  const bot = new TelegramBot(data.token, { polling: true });
+  for(const myBot of allBots){
+    const bot = new TelegramBot(myBot.token, { polling: true });
+    console.log("bot",bot);
 
     bot.onText(/\/auth (.+)/, async(msg, match) => {
       const chatId = msg.chat.id;
-      if(match[1] === data.password){
-        const myBot = await Bot.findOne({where: {id:2}})
-        myBot.authorized = true;
+      if(match[1] === myBot.password){
+        myBot.authorizedUserId = msg.from.id;
         await myBot.save();
         bot.sendMessage(chatId, "welcome dear user you are authorized");
       }
@@ -19,9 +24,29 @@ const Bot = require("../models").Bots;
      
     });
 
+    bot.onText(/\/reminder (.+)/, async (msg, match) => {
+      if(myBot.authorizedUserId !== msg.from.id){
+        bot.sendMessage(msg.chat.id,"Hello dear user, first You need to authorized. Please use /auth comand and enter your password.");
+        return;
+      }
+
+      const parseMessageData = {
+        time:  match[1].split(" ")[0],
+        toDo: match[1].split(" ").splice(1).join(" ")
+      }
+      
+      await createReminderWithPgBoss({
+        botId: myBot.id,
+        chatId: msg.chat.id,
+        time: parseMessageData.time,
+        data: parseMessageData.toDo
+      })
+      bot.sendMessage(msg.chat.id,'Reminder activated')
+    })
+
     // Matches "/echo [whatever]"
     bot.onText(/\/echo (.+)/, (msg, match) => {
-      if(!data.authorized){
+      if(myBot.authorizedUserId !== msg.from.id){
         bot.sendMessage(msg.chat.id,"Hello dear user, first You need to authorized. Please use /auth comand and enter your password.");
         return;
       }
@@ -31,7 +56,7 @@ const Bot = require("../models").Bots;
     });
 
     bot.onText(/\/start/, (msg) => {
-      if(!data.authorized){
+      if(myBot.authorizedUserId !== msg.from.id){
         bot.sendMessage(msg.chat.id,"Hello dear user, first You need to authorized. Please use /auth comand and enter your password.");
         return;
       }
@@ -42,11 +67,21 @@ const Bot = require("../models").Bots;
         });
     });
 
+    // bot.onText(/\/help/, (msg) => {
+    //   if(myBot.authorizedUserId !== msg.from.id){
+    //     bot.sendMessage(msg.chat.id,"Hello dear user, first You need to authorized. Please use /auth comand and enter your password.");
+    //     return;
+    //   }
+    //   bot.sendMessage(msg.chat.id, "List of usefull comands /auth <Password>");
+    // });
+
     bot.on('message', async(msg)=>{
 
-      const findBot = await Bot.findOne({where:{id:2}});
+      if(msg.text.startsWith('/')){
+        return;
+      }
 
-      if(!findBot.authorized){
+      if(myBot.authorizedUserId !== msg.from.id){
         bot.sendMessage(msg.chat.id,"Hello dear user, first You need to authorized. Please use /auth comand and enter your password.");
         return;
       }
@@ -54,7 +89,7 @@ const Bot = require("../models").Bots;
       const botComands = {
         greeting: "hi",
         goodBye: "bye",
-        robot: "I'm a robot",
+        robot: "I'm robot",
         text1: "Sample text",
         text2: "Second sample",
         keyboard: "Keyboard"
@@ -64,8 +99,8 @@ const Bot = require("../models").Bots;
         bot.sendMessage(msg.chat.id,"Hello dear user");
       }
       if(msg.text.toString().toLowerCase().includes(botComands.goodBye)){
-        findBot.authorized = false;
-        await findBot.save();
+        myBot.authorizedUserId = null;
+        await myBot.save();
         bot.sendMessage(msg.chat.id,"Was very glad to hear you Dear user , Bye");
       }
       if (msg.text.indexOf(botComands.robot) === 0) {
@@ -81,6 +116,7 @@ const Bot = require("../models").Bots;
           bot.sendMessage(msg.chat.id, "You just use keyboard");
       }
     })
+  }
 
 })();
 

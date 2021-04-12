@@ -10,7 +10,8 @@
     "http-errors": "1.6.3",
     "morgan": "1.9.1",
     "node-telegram-bot-api": "0.52.0",
-    "pg": "^8.5.1",
+    "pg": "8.5.1",
+    "pg-boss": "5.2.3",
     "pg-hstore": "2.3.3",
     "sequelize": "6.6.2"
   },
