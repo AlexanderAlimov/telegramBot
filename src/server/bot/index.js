@@ -1,8 +1,9 @@
 const TelegramBot = require("node-telegram-bot-api");
 const Bot = require("../models").Bots;
-const createReminderWithPgBoss = require('../servieces/pgBoss');
+const pgBoss = require('../servieces/pgBoss').pgBoss;
+const subscribeToJob = require('../servieces/pgBossSubscribe');
 
-(async()=>{
+const initializeBot = async()=>{
   const allBots = await Bot.findAll({});
 
   if(!allBots.length){
@@ -32,14 +33,24 @@ const createReminderWithPgBoss = require('../servieces/pgBoss');
         time:  match[1].split(" ")[0],
         toDo: match[1].split(" ").splice(1).join(" ")
       }
-      
-      await createReminderWithPgBoss({
+
+      const queue = 'track-your-time-new-task';
+      const queueParams = {
         botId: myBot.id,
         chatId: msg.chat.id,
         time: parseMessageData.time,
         data: parseMessageData.toDo
-      })
-      bot.sendMessage(msg.chat.id,'Reminder activated')
+      }
+
+      let jobId = await pgBoss.publish(queue, queueParams);
+      console.log(`created job in queue ${queue}: ${jobId}`);
+
+      bot.sendMessage(msg.chat.id,'Reminder activated');
+
+      //pg-boss subscription to the task;
+      subscribeToJob(queue);
+
+
     })
 
     // Matches "/echo [whatever]"
@@ -122,7 +133,9 @@ const createReminderWithPgBoss = require('../servieces/pgBoss');
     })
   }
 
-})();
+};
+
+module.exports = initializeBot;
 
 
 

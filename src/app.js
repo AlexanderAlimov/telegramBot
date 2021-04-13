@@ -3,10 +3,12 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const pgBossInitialize = require('./server/servieces/pgBoss').pgBossInitialize;
+const initializeBot = require("./server/bot/index");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-require("./server/bot/index");
+
 
 const app = express();
 
@@ -39,5 +41,10 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+//start pg-boss
+pgBossInitialize();
+//start bot
+initializeBot();
 
 module.exports = app;
