@@ -4,7 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const pgBossInitialize = require('./server/servieces/pgBoss').pgBossInitialize;
-const initializeBot = require("./server/bot/index");
+const initializeBot = require("./server/bot/index").initializeBot;
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");

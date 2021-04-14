@@ -5,6 +5,7 @@ const subscribeToJob = require('../servieces/pgBossSubscribe');
 
 const initializeBot = async()=>{
   const allBots = await Bot.findAll({});
+  global.allInstances = [];
 
   if(!allBots.length){
     return;
@@ -12,6 +13,7 @@ const initializeBot = async()=>{
 
   for(const myBot of allBots){
     const bot = new TelegramBot(myBot.token, { polling: true });
+    allInstances.push(bot);
 
     bot.onText(/\/auth (.+)/, async(msg, match) => {
       const chatId = msg.chat.id;
@@ -42,9 +44,7 @@ const initializeBot = async()=>{
         data: parseMessageData.toDo
       }
 
-      // let jobId = await pgBoss.publish(queue, queueParams);
-      await pgBoss.schedule(queue,`*/2 * * * *`,queueParams);
-      // console.log(`created job in queue ${queue}: ${jobId}`);
+      await pgBoss.schedule(queue,`*/1 * * * *`,queueParams);
 
       bot.sendMessage(msg.chat.id,'Reminder activated');
 
@@ -133,10 +133,10 @@ const initializeBot = async()=>{
       }
     })
   }
-
+  
 };
 
-module.exports = initializeBot;
+module.exports.initializeBot = initializeBot;
 
 
 
