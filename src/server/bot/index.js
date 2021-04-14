@@ -34,7 +34,7 @@ const initializeBot = async()=>{
         toDo: match[1].split(" ").splice(1).join(" ")
       }
 
-      const queue = 'track-your-time-new-task';
+      const queue = 'test-time-task';
       const queueParams = {
         botId: myBot.id,
         chatId: msg.chat.id,
@@ -42,8 +42,9 @@ const initializeBot = async()=>{
         data: parseMessageData.toDo
       }
 
-      let jobId = await pgBoss.publish(queue, queueParams);
-      console.log(`created job in queue ${queue}: ${jobId}`);
+      // let jobId = await pgBoss.publish(queue, queueParams);
+      await pgBoss.schedule(queue,`*/2 * * * *`,queueParams);
+      // console.log(`created job in queue ${queue}: ${jobId}`);
 
       bot.sendMessage(msg.chat.id,'Reminder activated');
 
