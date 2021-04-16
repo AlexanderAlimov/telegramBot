@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
+    queryInterface.sequelize.query("CREATE EXTENSION IF NOT EXISTS pgcrypto;");
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -12,5 +12,5 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-  }
+  },
 };

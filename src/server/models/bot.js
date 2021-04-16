@@ -12,7 +12,6 @@ module.exports = (sequelize, Sequelize) => {
     authorizedUserId: {
       type: Sequelize.INTEGER,
     },
-    
   });
 
   return Bot;

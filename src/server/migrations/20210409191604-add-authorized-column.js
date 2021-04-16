@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -14,8 +14,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return Promise.all([
-      queryInterface.removeColumn('Bots', 'authorized')
-    ]);
-  }
+    return Promise.all([queryInterface.removeColumn("Bots", "authorized")]);
+  },
 };
