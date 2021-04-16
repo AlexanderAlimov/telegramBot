@@ -1,5 +1,5 @@
 const TelegramBot = require("node-telegram-bot-api");
-const timeZone = require("countries-and-timezones");
+const cityTimezones = require("city-timezones");
 const Bot = require("../models").Bots;
 const pgBoss = require("../servieces/pgBoss").pgBoss;
 const subscribeToJob = require("../servieces/pgBossSubscribe");
@@ -11,8 +11,6 @@ const initializeBot = async () => {
   if (!allBots.length) {
     return;
   }
-
-  console.log(timeZone);
 
   for (const myBot of allBots) {
     const bot = new TelegramBot(myBot.token, { polling: true });
@@ -37,17 +35,37 @@ const initializeBot = async () => {
         return;
       }
 
+      const receivedReminderText = match[1].trim();
+      const getCityFromReminder = receivedReminderText
+        .split(" ")
+        .splice(-1)
+        .pop();
+      const timeAndTask = receivedReminderText
+        .split(" ")
+        .slice(0, -1)
+        .join(" ");
+
       const parseMessageData = {
-        time: match[1].split(" ")[0],
-        toDo: match[1].split(" ").splice(1).join(" "),
+        time: timeAndTask.split(" ")[0],
+        toDo: timeAndTask.split(" ").splice(1).join(" "),
       };
       const { minute, hour } = timeParser(parseMessageData.time);
 
-      if (!minute || !hour) {
+      if (minute === null || hour === null) {
         bot.sendMessage(
           msg.chat.id,
           `Please enter time in correct format
           example: 21:54 `
+        );
+        return;
+      }
+
+      const { timeZone } = getTimeZone(getCityFromReminder);
+      if (!timeZone) {
+        bot.sendMessage(
+          msg.chat.id,
+          `Please enter correct name of your city
+          example: Chicago `
         );
         return;
       }
@@ -61,7 +79,7 @@ const initializeBot = async () => {
       };
 
       await pgBoss.schedule(queue, `${minute} ${hour} * * *`, queueParams, {
-        tz: "Europe/Kiev",
+        tz: timeZone,
       });
 
       bot.sendMessage(msg.chat.id, "Reminder activated");
@@ -120,7 +138,7 @@ const initializeBot = async () => {
       hi - greeting
       bye - say goodbye and log out
       /reminder - command for activating to cron task and to send reminder to you when time will come
-      format to input data : /reminder <time> <task name(what need to be done)> <timezone(city/country)>
+      format to input data : /reminder <time> <task name(what need to be done)> <City Name(Chicago)>
       `
       );
     });
@@ -181,7 +199,7 @@ function timeParser(time) {
   let minute = Number(time.split(":")[1]);
 
   hour = hour >= 1 && hour <= 24 ? hour : null;
-  minute = minute >= 1 && minute <= 59 ? minute : null;
+  minute = (minute >= 1 && minute <= 59) || minute == 0 ? minute : null;
 
   return {
     minute,
@@ -190,7 +208,17 @@ function timeParser(time) {
 }
 
 function getTimeZone(data) {
-  console.log("timeZone ====", data);
+  let city = data.toLowerCase();
+  city = city.charAt(0).toUpperCase() + city.slice(1);
+  let timeZone;
+  const cityLookup = cityTimezones.lookupViaCity(city);
+  if (!cityLookup.length) {
+    timeZone = null;
+  }
+  timeZone = cityLookup[0].timezone;
+  return {
+    timeZone,
+  };
 }
 
 module.exports.initializeBot = initializeBot;
