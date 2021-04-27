@@ -1,0 +1,8 @@
+POST http://localhost:3000/bot
+Content-Type: application/json
+
+{
+  "botName": "assistant_mk_bot",
+  "token": "1775452676:AAFePE6sv2HCNc6dGKGYMy1ggpsyT_wy3xY",
+  "password": "12345"
+}

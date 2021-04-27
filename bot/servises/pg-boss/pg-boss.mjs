@@ -1,12 +1,11 @@
 import PgBoss from "pg-boss";
 
-
 class Boss {
     constructor(){
         this.boss = new PgBoss("postgres://postgres:postgres@127.0.0.1/telegramBotDB");
     }
 
-    async createReminderWithPgBoss(){
+    async start(){
         this.boss.on("error", (error) => console.error("Eror =", error));
 
         await this.boss.start();

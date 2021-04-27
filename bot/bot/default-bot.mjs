@@ -138,9 +138,9 @@ class DefaultBot extends Bot {
         }
 
          //start pg-boss
-        this.boss.createReminderWithPgBoss();
   
         const receivedReminderText = match[1].trim();
+
         const getCityFromReminder = receivedReminderText
           .split(" ")
           .splice(-1)
@@ -166,6 +166,7 @@ class DefaultBot extends Bot {
         }
   
         const { timeZone } = this.#getTimeZone(getCityFromReminder);
+
         if (!timeZone) {
           this.bot.sendMessage(
             msg.chat.id,
