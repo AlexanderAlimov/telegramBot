@@ -1,0 +1,9 @@
+{
+  "name": "logger",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "winston": "3.3.3"
+  }
+}

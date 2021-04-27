@@ -1,9 +1,0 @@
-# Create bot
-
-POST http://localhost:3000/createBot
-Content-Type: application/json
-
-{
-  "botName": "assistant_mk_bot11",
-  "token": "1775452676:AAFePE6sv2HCNc6dGKGYMy1gg11psyT_wy3xY"
-}

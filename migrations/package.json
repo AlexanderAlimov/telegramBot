@@ -1,0 +1,11 @@
+{
+  "name": "telegrambot",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {},
+  "devDependencies": {
+    "sequelize": "6.6.2",
+    "sequelize-cli": "6.2.0",
+    "pg": "8.6.0"
+  }
+}
