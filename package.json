@@ -2,23 +2,23 @@
   "name": "telegrambot",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "nodemon ./src/bin/www",
-    "migrate": "node_modules/.bin/sequelize db:migrate",
-    "postinstall": "cd src && npm install",
-    "eslint": "node_modules/.bin/eslint \"src/**/*.js\"",
-    "prettier": "prettier --write \"src/**/*.js\""
+    "lint": "node_modules/.bin/eslint \\\"web/**/*.mjs\\\"",
+    "formatBot": "prettier --write \\\"bot/**/*.mjs\\\"",
+    "formatWeb": "prettier --write \\\"web/**/*.mjs\\\""
   },
   "devDependencies": {
-    "eslint": "^7.23.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "nodemon": "2.0.7",
-    "prettier": "2.2.1"
+    "eslint": "7.24.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "prettier": "2.2.1",
+    "sequelize": "6.6.2",
+    "sequelize-cli": "^6.2.0"
   },
   "dependencies": {
-    "pg": "^8.5.1",
-    "sequelize": "^6.6.2",
-    "sequelize-cli": "^6.2.0"
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.3"
   }
 }
