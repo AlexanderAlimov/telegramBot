@@ -1,14 +1,15 @@
 import PgBoss from "pg-boss";
 
 class Boss {
-    constructor(){
-        this.boss = new PgBoss("postgres://postgres:postgres@127.0.0.1/telegramBotDB");
+    constructor(connectionString){
+        this.boss = new PgBoss(connectionString);
     }
 
     async start(){
         this.boss.on("error", (error) => console.error("Eror =", error));
+        this.boss.on("monitor-states", (state) => console.log(state));
 
-        await this.boss.start();
+        return await this.boss.start();
     }
 
     async pgBossSchedule({queue,timeString,queueParams,timZone}){

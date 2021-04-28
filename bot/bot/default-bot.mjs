@@ -2,12 +2,12 @@ import Bot from "./bot.mjs";
 import TelegramBot from "node-telegram-bot-api";
 import Boss from "../servises/pg-boss/pg-boss.mjs";
 import cityTimezones from "city-timezones";
+import scheduler from "../scheduler.js";
 
 class DefaultBot extends Bot {
   constructor(token) {
     super(token);
     this.bot = new TelegramBot(token, { polling: true });
-    this.boss = new Boss();
   }
 
   start(myBot) {
@@ -193,12 +193,12 @@ class DefaultBot extends Bot {
             }
         }
 
-        await this.boss.pgBossSchedule(objParams);
+        await scheduler.pgBossSchedule(objParams);
   
         this.bot.sendMessage(msg.chat.id, "Reminder activated");
   
         //pg-boss subscription to the task;
-        this.boss.pgBossSubscribe(queue);
+        scheduler.pgBossSubscribe(queue);
       });
   }
 

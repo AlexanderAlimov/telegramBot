@@ -2,7 +2,7 @@
 import Bot from "db/models/bot.mjs";
 import DBProvider from "db/loader.mjs";
 import DefaultBot from "./bot/default-bot.mjs";
-import Boss from "./servises/pg-boss/pg-boss.mjs";
+import scheduler from "./scheduler.js";
 
 const db = new DBProvider(
   "postgres://postgres:postgres@localhost:5432/telegramBotDB"
@@ -19,9 +19,7 @@ const db = new DBProvider(
       return;
     }
 
-    const boss = new Boss();
-
-    const obj = await boss.start();
+    const obj = await scheduler.start();
 
     for (let myBot of bots) {
       const token = myBot.token;
