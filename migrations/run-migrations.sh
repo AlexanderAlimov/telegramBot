@@ -18,5 +18,3 @@ if [ "$1" = "$PROD_KEY" ]; then
   ./node_modules/.bin/sequelize-cli db:migrate --url $CONNECTION_STRING
   exit 0;
 fi
-
-

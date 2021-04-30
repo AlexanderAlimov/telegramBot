@@ -1,1 +1,3 @@
-# telegramBot
+# Telegram Bot project
+
+Study project
