@@ -20,6 +20,10 @@ class Bot extends Sequelize.Model {
           type: Sequelize.DataTypes.STRING,
           allowNull: true,
         },
+        timezone: {
+          type: Sequelize.DataTypes.STRING,
+          allowNull: true,
+        },
       },
       {
         sequelize,

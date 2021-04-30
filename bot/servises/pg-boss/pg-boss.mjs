@@ -16,19 +16,10 @@ class Boss {
         await this.boss.schedule(queue,timeString,queueParams,timZone);
     }
 
-    async pgBossSubscribe(queue){
-        await this.boss.subscribe(queue, this.#jobHandler);
+    async pgBossSubscribe(queue,jobHandler){
+        await this.boss.subscribe(queue, jobHandler);
     }
 
-    #jobHandler(data){
-        console.log(`job ${data.id} received with data:`);
-        console.log(JSON.stringify(data.data));
-        this.#sendNotification(data.data);
-    }
-
-    #sendNotification(data){
-        global.allInstances[data.botId].sendMessage(data.chatId, `${data.data}`);
-    }
 }
 
 export default Boss;

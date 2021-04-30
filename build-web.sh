@@ -2,7 +2,7 @@
 
 npm pack ./db
 npm pack ./logger
-mv *.tgz modules/
+mv *.tgz modulesWeb/
 
 cd web
 npm i

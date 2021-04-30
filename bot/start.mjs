@@ -14,7 +14,7 @@ const db = new DBProvider(
     const bots = await Bot.findAll();
     global.allInstances = {};
 
-    //if there is no bots just return
+    //if there is no bots just returnmyBot
     if (!bots.length) {
       return;
     }
