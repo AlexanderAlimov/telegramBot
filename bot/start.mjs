@@ -1,12 +1,13 @@
-// import logger from "../web/logger/index.mjs";
+import logger from "../logger/index.mjs";
+import Config from "../config/config.mjs"
 import Bot from "db/models/bot.mjs";
 import DBProvider from "db/loader.mjs";
 import DefaultBot from "./bot/default-bot.mjs";
 import scheduler from "./scheduler.js";
 
-const db = new DBProvider(
-  "postgres://postgres:postgres@localhost:5432/telegramBotDB"
-);
+const config = new Config();
+
+const db = new DBProvider(config.getDbConnectionString());
 
 (async () => {
   try {

@@ -3,13 +3,10 @@ import DBProvider from "db/loader.mjs";
 import logger from "logger/index.mjs";
 import Config from "config/config.mjs"
 
-// const config = new Config();
-// console.log(config.getDbConnectionString());
+const config = new Config();
 
 const server = new Server(3000);
-const db = new DBProvider(
-  "postgres://postgres:postgres@localhost:5432/telegramBotDB"
-);
+const db = new DBProvider(config.getDbConnectionString());
 
 (async () => {
   try {

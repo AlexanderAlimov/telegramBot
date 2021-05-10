@@ -3,8 +3,6 @@
 DEV_KEY="dev"
 PROD_KEY="prod"
 
-echo "${DEV_KEY}"
-
 if [ "$1" = "$DEV_KEY" ]; then
     \cp ./env/dev.env ./web/.env
 fi
@@ -12,6 +10,7 @@ fi
 if [ "$1" = "$PROD_KEY" ]; then
     \cp ./env/production.env ./web/.env
 fi
+
 
 npm pack ./db
 npm pack ./logger

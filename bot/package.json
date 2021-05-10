@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "db": "file:../modules/db-0.0.1.tgz",
+    "logger": "file:../modules/logger-0.0.1.tgz",
+    "config": "file:../modules/config-0.0.1.tgz",
     "node-telegram-bot-api": "0.52.0",
     "pg-boss": "5.2.3",
     "city-timezones": "1.2.0"
