@@ -2,35 +2,38 @@ import Bot from "./bot.mjs";
 import TelegramBot from "node-telegram-bot-api";
 import cityTimezones from "city-timezones";
 import scheduler ,{jobHandler} from "../scheduler.js";
+import BotService from "../servises/bot-service.mjs"
 
 
 class DefaultBot extends Bot {
-  constructor(token) {
+  constructor(token, botEntity) {
     super(token);
     this.bot = new TelegramBot(token, { polling: true });
+    this.myBot = botEntity;
+    this.botService = new BotService(botEntity);
   }
 
-  start(myBot) {
+  start() {
     //add bot to global space 
-    Object.assign(global.allInstances, { [myBot.id]: this.bot });
+    Object.assign(global.allInstances, { [this.myBot.id]: this.bot });
 
-    this.bot.onText(/\/auth (.+)/, this.#auth(myBot));
+    this.bot.onText(/\/auth (.+)/, this.#auth(this.myBot));
 
-    this.bot.onText(/\/timezone (.+)/, this.#timzoneSave(myBot));
+    this.bot.onText(/\/timezone (.+)/, this.#timzoneSave(this.myBot));
 
-    this.bot.onText(/\/updateTimezone (.+)/, this.#updateTimezone(myBot));
+    this.bot.onText(/\/updateTimezone (.+)/, this.#updateTimezone(this.myBot));
 
-    this.bot.onText(/\/echo (.+)/, this.#echo(myBot));
+    this.bot.onText(/\/echo (.+)/, this.#echo(this.myBot));
 
-    this.bot.onText(/\/start/, this.#start(myBot));
+    this.bot.onText(/\/start/, this.#start(this.myBot));
 
-    this.bot.onText(/\/help/, this.#helpService(myBot));
+    this.bot.onText(/\/help/, this.#helpService(this.myBot));
 
-    this.bot.on("message", this.#onListener(myBot));
+    this.bot.on("message", this.#onListener(this.myBot));
 
-    this.bot.onText(/\/reminder (.+)/, this.#reminder(myBot));
+    this.bot.onText(/\/reminder (.+)/, this.#reminder(this.myBot));
 
-    this.bot.onText(/\/showInfo/, this.#showInfo(myBot));
+    this.bot.onText(/\/showInfo/, this.#showInfo(this.myBot));
   }
 
   #timeParser(time) {
@@ -243,14 +246,17 @@ class DefaultBot extends Bot {
     }
   }
 
-  #auth(myBot){
+  #auth(){
     return async (msg, match) => {
       const chatId = msg.chat.id;
-      if (match[1] === myBot.password) {
-        myBot.owner = msg.from.id;
-        await myBot.save();
-        this.bot.sendMessage(chatId, "welcome dear user you are authorized Also please use /timezone comand to enter your timezone Details /help");
-      }
+
+      const password = match[1];
+      const fromId = msg.from.id;
+
+      const resultAuth = await this.botService.auth(password, fromId);
+
+      this.bot.sendMessage(chatId, resultAuth);
+      
       return;
     }
   }
