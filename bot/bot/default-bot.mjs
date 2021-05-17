@@ -1,7 +1,5 @@
 import Bot from "./bot.mjs";
 import TelegramBot from "node-telegram-bot-api";
-// import cityTimezones from "city-timezones";
-// import scheduler ,{jobHandler} from "../scheduler.mjs";
 import BotService from "../servises/bot-service.mjs"
 
 
