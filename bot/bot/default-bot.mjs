@@ -9,19 +9,19 @@ class DefaultBot extends Bot {
   constructor(token, botEntity) {
     super(token);
     this.bot = new TelegramBot(token, { polling: true });
-    this.myBot = botEntity;
+    this.botEntity = botEntity;
     this.botService = new BotService(botEntity);
   }
 
   start() {
     //add bot to global space 
-    Object.assign(global.allInstances, { [this.myBot.id]: this.bot });
+    Object.assign(global.allInstances, { [this.botEntity.id]: this.bot });
 
     this.bot.onText(/\/auth (.+)/, this.#auth());
 
-    this.bot.onText(/\/timezone (.+)/, this.#timzoneSave(this.myBot));
+    this.bot.onText(/\/timezone (.+)/, this.#timzoneSave());
 
-    this.bot.onText(/\/updateTimezone (.+)/, this.#updateTimezone(this.myBot));
+    this.bot.onText(/\/updateTimezone (.+)/, this.#updateTimezone());
 
     this.bot.onText(/\/echo (.+)/, this.#echo());
 
@@ -33,7 +33,7 @@ class DefaultBot extends Bot {
 
     this.bot.onText(/\/reminder (.+)/, this.#reminder());
 
-    this.bot.onText(/\/showInfo/, this.#showInfo(this.myBot));
+    this.bot.onText(/\/showInfo/, this.#showInfo(this.botEntity));
   }
 
   #helpService(){
@@ -151,7 +151,7 @@ class DefaultBot extends Bot {
     }
   }
 
-  #updateTimezone(myBot){
+  #updateTimezone(){
     return async(msg,match) => {
       const chatId = msg.chat.id;
       const preauthMessage = this.botService.preAuthCheck(msg.from.id)
@@ -168,7 +168,7 @@ class DefaultBot extends Bot {
     }
   }
 
-  #showInfo(myBot){
+  #showInfo(botEntity){
     return async(msg) => {
       const chatId = msg.chat.id;
       const preauthMessage = this.botService.preAuthCheck(msg.from.id)
@@ -180,7 +180,7 @@ class DefaultBot extends Bot {
 
       this.bot.sendMessage(
         msg.chat.id,
-          `your time zone is ${myBot.get('timezone')}`
+          `your time zone is ${botEntity.get('timezone')}`
       );
       return;
     }
