@@ -75,8 +75,10 @@ class BotService {
           message = "Hello dear user"
         }
         if (msg.text.toString().toLowerCase().includes(botComands.goodBye)) {
-          this.myBot.owner = null
-          await this.myBot.save()
+           if(this.myBot.id){
+            this.myBot.owner = null
+            await this.myBot.save()
+           }
            message ="Was very glad to hear you Dear user , Bye"
         }
         if (msg.text.indexOf(botComands.robot) === 0) {
@@ -156,8 +158,8 @@ class BotService {
         };
       }
       
-      getTimeZone(myBot) {
-        let city = myBot.get('timezone').toLowerCase();
+      getTimeZone() {
+        let city = this.myBot.timezone.toLowerCase();
         city = city.charAt(0).toUpperCase() + city.slice(1);
         let timeZone;
         const cityLookup = cityTimezones.lookupViaCity(city);

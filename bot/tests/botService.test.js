@@ -1,7 +1,7 @@
 import BotService from "../servises/bot-service.mjs"
 let botService
 beforeEach(()=>{
-    botService = new BotService({owner:"608717305"});
+    botService = new BotService({owner:"608717305", timezone: "Lvov"});
 })
 
 describe("Bot Service tests",() => {
@@ -41,6 +41,39 @@ describe("Bot Service tests",() => {
         })
     })
 
+    describe("check possible commands service on listener", () => {
+        test("check check greeting", async() => {
+            let msg = {text: "hi"}
+            expect(await botService.onListener(msg)).toBe("Hello dear user")
+        })
     
+        test("check good bye case", async() => {
+            let msg = {text: "bye"}
+            expect(await botService.onListener(msg)).toBe("Was very glad to hear you Dear user , Bye")
+        })
+
+        test("check Keyboard case", async() => {
+            let msg = {text: "Keyboard"}
+            expect(await botService.onListener(msg)).toBe("You just use keyboard")
+        })
+    })
+
+    describe("check time zone services", () => {
+        test("check get timezone", () => {
+            expect(botService.getTimeZone()).toBe({timeZone: "Europe/Kiev"})
+        })
+    
+        // test("check save time zone", () => {
+        //     let msg = {text: "bye"}
+        //     expect(botService.onListener(msg)).toBe("Was very glad to hear you Dear user , Bye")
+        // })
+
+        // test("check update timezone", () => {
+        //     let msg = {text: "Keyboard"}
+        //     expect(botService.onListener(msg)).toBe("You just use keyboard")
+        // })
+    })
+
+
 
 })
