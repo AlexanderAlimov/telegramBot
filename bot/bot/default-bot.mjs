@@ -1,7 +1,7 @@
 import Bot from "./bot.mjs";
 import TelegramBot from "node-telegram-bot-api";
 import BotService from "../servises/bot-service.mjs"
-
+import BotBitlyService from "../servises/bot-bilty-service.mjs"
 
 class DefaultBot extends Bot {
   constructor(token, botEntity) {
@@ -9,6 +9,7 @@ class DefaultBot extends Bot {
     this.bot = new TelegramBot(token, { polling: true });
     this.botEntity = botEntity;
     this.botService = new BotService(botEntity);
+    this.botBitlyService = new BotBitlyService();
   }
 
   start() {
@@ -32,6 +33,8 @@ class DefaultBot extends Bot {
     this.bot.onText(/\/reminder (.+)/, this.#reminder());
 
     this.bot.onText(/\/showInfo/, this.#showInfo(this.botEntity));
+
+    this.bot.onText(/\/shortUrl (.+)/, this.#shortUrl());
   }
 
   #helpService(){
@@ -184,7 +187,22 @@ class DefaultBot extends Bot {
     }
   }
 
+  #shortUrl(){
+    return async(msg, match) => {
+      const chatId = msg.chat.id;
+      const preauthMessage = this.botService.preAuthCheck(msg.from.id)
 
+      if(preauthMessage){
+        this.bot.sendMessage(chatId, preauthMessage);
+        return;
+      }
+
+      const url = match[1]
+      const shortLinkMessage = await this.botBitlyService.shortUrl(url)
+      this.bot.sendMessage(chatId,shortLinkMessage)
+      return;
+    }
+  }
 }
 
 export default DefaultBot;

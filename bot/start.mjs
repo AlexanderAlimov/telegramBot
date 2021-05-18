@@ -7,9 +7,9 @@ import scheduler from "./scheduler.mjs";
 
 const config = new Config();
 
-// const db = new DBProvider(config.getDbConnectionString());
+const db = new DBProvider(config.getDbConnectionString());
 
-const db = new DBProvider("postgres://postgres:postgres@localhost:5432/telegramBotDB");
+// const db = new DBProvider("postgres://postgres:postgres@localhost:5432/telegramBotDB");
 
 (async () => {
   try {
