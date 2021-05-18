@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "start": "node start.mjs",
-    "test": "node --experimental-vm-modules ../node_modules/jest/bin/jest.js"
+    "start": "node start.mjs"
   },
   "dependencies": {
     "db": "file:../modules/db-0.0.1.tgz",
