@@ -5,7 +5,9 @@ import url from "url";
 
 class DBProvider {
   constructor(connectionString) {
-    this.sequelize = new Sequelize(connectionString);
+    this.sequelize = new Sequelize(connectionString, {
+      dialect: 'postgres'
+    });
   }
 
   async connectToDB() {

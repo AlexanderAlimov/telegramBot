@@ -1,9 +1,15 @@
-FROM node:14-alpine
+# Build stage
+FROM node:14-alpine as build
 
-COPY app /usr/share/app
+COPY modules /tmp
+COPY web/app /usr/share/app
 
 WORKDIR /usr/share/app
 
-RUN npm i
+RUN npm i && npm i /tmp/config-0.0.1.tgz && npm i /tmp/db-0.0.1.tgz && npm i /tmp/logger-0.0.1.tgz
 
+# Build stage
+FROM node:14-alpine
+COPY --from=build /usr/share/app /usr/share/app 
+WORKDIR /usr/share/app
 CMD ["npm", "start"]
