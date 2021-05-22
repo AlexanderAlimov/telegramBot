@@ -16,10 +16,16 @@ npm pack ./logger
 mv *.tgz modules/
 
 cd bot
+
+rm package-lock.json
+
 npm i
 rm -rf ./node_modules/db
 npm update db
 rm -rf ./node_modules/logger
 npm update logger
+
+rm -rf ./node_modules/config
+npm update config
 
 cd ..

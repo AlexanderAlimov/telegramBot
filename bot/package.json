@@ -12,5 +12,6 @@
     "node-telegram-bot-api": "0.52.0",
     "pg-boss": "5.2.3",
     "city-timezones": "1.2.0"
-  }
+  },
+  "devDependencies": {}
 }
